@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+
+import sys
+import socket
+
+Csocket = socket.socket()
+host = '192.168.56.3'
+port = 8989
+
+print("....LOADING....")
+
+try:
+    Csocket.connect((host, port))
+except socket.error as e:
+    print(str(e))
+
+msg = Csocket.recv(1024)
+print(msg.decode('utf-8'))
+cmsg = "Calculation from client 1 has been successfully!"
+Csocket.send(cmsg.encode('utf-8'))
+
+while True:
+
+    print("\nMath Calculation")
+    print("1- Logarithmic function")
+    print("2- Square Root function")
+    print("3- Exponential function")
+    print("E- Exit system")
+    option = input('Please enter the number base on calculation: ')
+
+    if option == '1' or option == '2' or option == '3':
+        value = input("Enter a value: ")
+        option = option + ":" + value
+        Csocket.send(str.encode(option))
+
+    elif option == 'E':
+        print(".....Exiting system......")
+        Csocket.send(str.encode(option))
+        sys.exit()
+
+  else:
+        print("Wrong Input")
+        sys.exit()
+
+    msg = Csocket.recv(1024)
+    print(msg.decode("utf-8"))
+
+Csocket.close()
+
